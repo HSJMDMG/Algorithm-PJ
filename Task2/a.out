@@ -1,11 +1,13 @@
-ACG
-TCG
-CGA
-CGC
-CTG
-GAT
-GCA
-GCT
-ATG
-CAT
-CTT
+Loading Data
+Data loaded, Time cost:8e-05
+Creating graph
+graph created, Time cost:1.9e-05
+Begin working
+Pre_process: calculating distance f[i][K]
+Pre_process finished, Time cost:8.8e-05
+ACGCATG
+3
+DEL 1
+INS 3 G
+DEL 6
+Work finished, Time cost:0.00032
