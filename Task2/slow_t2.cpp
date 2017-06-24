@@ -92,8 +92,8 @@ void createGraph() {
 }
 
 
-int get_edit_distance(int nodenum) {
-	for (int i = 0; i < K; i++){
+void get_edit_distance(int nodenum) {
+	for (int i = 0; i <= K; i++){
 		edit[i][0] = i;
 		edit[0][i] = i;
 	}
@@ -135,10 +135,7 @@ void pre_process() {
 	cout<<"Pre_process finished, Time cost:"<< (double)(finishtime - starttime) / CLOCKS_PER_SEC <<endl;
 
 }
-
-
-void print_ops(string A, string B)
-{
+void print_ops(string A, string B){
 
 	//cout<<"Printing operations"<<endl;
 	//starttime = clock();
@@ -262,59 +259,79 @@ void print_ops(string A, string B)
 
 
 }
-
 void print_result() {
 
-	int mindistance = INF;
+	int mindistance;
 	int pos = -1;
+	/*
+		cout<<A.length()<<endl;
+				cout<<"Pre:"<<endl;
+				for (int i = 0; i< N;i++)
+				{
+					for (int j = 0; j <=A.length(); j++)
+						cout<<pre[i][j]<<" ";
+					cout<<endl;
+				}
 
-		/*
-			cout<<"Pre:"<<endl;
-			for (int i = 0; i<N;i++)
-			{
-				for (int j = 0; j < A.length(); j++)
-					cout<<pre[i][j]<<" ";
-				cout<<endl;
-			}
+				cout<<"State:"<<endl;
+				for (int i = 0; i<N;i++)
+				{
+					for (int j = 0; j <= A.length(); j++)
+						cout<<state[i][j]<<" ";
+					cout<<endl;
+				}
 
-			cout<<"State:"<<endl;
-			for (int i = 0; i<N;i++)
-			{
-				for (int j = 0; j < A.length(); j++)
-					cout<<state[i][j]<<" ";
-				cout<<endl;
-			}
+				cout<<"f:"<<endl;
+				for (int i = 0; i<N;i++)
+				{
+					for (int j = 0; j <= A.length(); j++)
+						cout<<f[i][j]<<" ";
+					cout<<endl;
+				}
+	*/
 
-			cout<<"f:"<<endl;
-			for (int i = 0; i<N;i++)
-			{
-				for (int j = 0; j < A.length(); j++)
-					cout<<f[i][j]<<" ";
-				cout<<endl;
-			}
 
-			*/
+		//return;
+
+
 		mindistance = INF;
 		//cout<<A.length()<<endl;
+		//
+		//为什么A.length - 1
 		for (int i = 0; i < N; i++)
-			if (mindistance > f[i][A.length() - 1]) {
-				mindistance = f[i][A.length() - 1];
+			if (mindistance > f[i][A.length()]) {
+				mindistance = f[i][A.length()];
 				pos = i;
 				//cout<<i<<"mini"<<" "<<endl;
 			}
+			cout<<"f[i][0 -- A.length]"<<endl;
+
+		for (int i = 0; i < N; i++) {
+			cout<<i<<" : "<<f[i][A.length()]<<endl;
+
+			}
+
+
+
+			cout<<mindistance<<endl;
+
+		cout<<"begin print"<<endl;
 
 
 		int i,j;
-		i = pos; j = A.length() - 1;
+		i = pos; j = A.length();
 		string path_str,state_str, op_str;
 		path_str = "";
 		state_str = "";
 		op_str="";
+
 		while (pre[i][j] >=0)
 		{
+			//cout<<i<<","<<j<<endl;
 			state_str  = char(48 + state[i][j]) + state_str;
 			if (state[i][j] != 4) path_str = ch[i] + path_str;
 
+			//WARNING: 这边j可能有问题
 			if (state[i][j] == 1)
 			{
 				op_str = "INS "+ to_string(j) + " " + ch[i] + "\n" + op_str;
@@ -336,6 +353,9 @@ void print_result() {
 				continue;
 			}
 		}
+		cout<<"start:("<<i<<","<<j<<")"<<":"<<f[i][j]<<endl;
+
+
 
 		path_str = str[i] + path_str;
 
@@ -350,46 +370,45 @@ void print_result() {
 
 		//TODO: print the operations(use task1 method)
 }
-
 void work() {
 
 	cout<<"Begin working"<<endl;
 	starttime = clock();
 	//i : node i; j: a[j]
-	memset(inq, 0, sizeof(inq));
-	//f[i][0] = K;
-	//pre[i][0] = -1;
-	//state[i][0] = -1;
-
 	//for each node i ,calc edit distance with A
 	//
 
 	pre_process();
-	for (int i = 0; i < N; i++){
-		Q[K].push(i);
-		inq[0][i] = true;
-	}
 
-
-
-	for (int j = 0; j < A.length(); j++) {
+	for (int i = 0; i<= A.length(); i++)
+		for (int j = 0; j< N; j++)
+			inq[i][j] = 0;
+	
+	for (int j = 0; j <= A.length(); j++) {
 
 		//cout<< j <<endl;
 		//cout<<"AC!"<<endl;
 		int i;
+		if (j<=K) {
+			for (int _ = 0; _  < N; _++) {
+				if (!inq[j][_]) {Q[j].push(_);inq[j][_] = true;}
+			}
+		}
 		while (!Q[j].empty())
 		{
+			//cout<<j<<" "<<i<<endl;
 			i = Q[j].front();
 			//考虑用f[i][j]来更新后面的f。i为结点编号，j为在A中位置
 			node *p = e[i];
 			//cout<<j<<","<<i<<endl;
+			inq[j][i] = false;
 
 			while (p!= NULL)
 			{
 				int k=p->v;
 				//cout<<j<<","<<i<<","<<k<<endl;
 
-				if (f[k][j] >= f[i][j] + 1)
+				if (f[k][j] > f[i][j] + 1)
 				{
 					f[k][j] = f[i][j] + 1;
 					pre[k][j] = i;
@@ -404,7 +423,7 @@ void work() {
 
 				if (ch[k] != A[j])
 				{
-					if (f[k][j + 1] >= f[i][j] + 1)
+					if (f[k][j + 1] > f[i][j] + 1)
 					{
 						f[k][j + 1] = f[i][j] + 1;
 						pre[k][j + 1] = i;
@@ -419,7 +438,7 @@ void work() {
 				}
 				else
 				{
-					if (f[k][j + 1] >= f[i][j])
+					if (f[k][j + 1] > f[i][j])
 					{
 						f[k][j + 1] = f[i][j];
 						pre[k][j + 1] = i;
@@ -432,27 +451,31 @@ void work() {
 						}
 					}
 				}
-
-				if (f[i][j + 1] >= f[i][j] + 1)
-				{
-					f[i][j + 1] = f[i][j] + 1;
-					pre[i][j + 1] = i;
-					state[i][j + 1] = 4;
-
-					if (!inq[j+1][i])
-					{
-						inq[j+1][i] = true;
-						Q[j+1].push(i);
-					}
-				}
-
 				p=p->next;
 			}
+
+			if (f[i][j + 1] > f[i][j] + 1)
+			{
+				f[i][j + 1] = f[i][j] + 1;
+				pre[i][j + 1] = i;
+				state[i][j + 1] = 4;
+
+				if (!inq[j+1][i])
+				{
+					inq[j+1][i] = true;
+					Q[j+1].push(i);
+				}
+			}
+
 			Q[j].pop();
-			inq[j][i] = false;
+
+			//cout<<"finish"<<endl;
 		}
+
+		//cout<<"j: "<<j<<endl;
 	}
 
+//cout<<"ToGetResult"<<endl;
 	print_result();
 
 
@@ -460,8 +483,9 @@ void work() {
 	cout<<"Work finished, Time cost:"<< (double)(finishtime - starttime) / CLOCKS_PER_SEC <<endl;
 }
 
+
 int main() {
-	freopen("task2.in", "r", stdin);
+	freopen("test2.in", "r", stdin);
 	freopen("t2.out", "w", stdout);
 
 	init();
