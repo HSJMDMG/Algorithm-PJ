@@ -12,9 +12,10 @@ using namespace std;
 
 clock_t starttime, finishtime;
 
-const int MAXN = 10010;
-const int INF = 1000100;
-const int MAXLEN = 10010;
+const int MAXN =  1000010;
+//const int INF = 1000100;
+int INF;
+const int MAXLEN = 100010;
 const int MAXK = 35;
 
 struct node
@@ -36,13 +37,13 @@ int pre[MAXN][MAXLEN];
 queue<int> Q[2];
 bool inq[2][MAXN];
 char ch[MAXN];
-int edit[MAXK][MAXK];
+int edit[2][MAXK];
 
 int tf[MAXLEN][MAXN], pedit[MAXLEN][MAXN];
 stack<string> tS;
 
-ifstream fin("test2.in");
-ofstream fout("test2.out");
+ifstream fin("task3.in");
+ofstream fout("task3.out");
 
 int min(int a, int b){
 	return a<b?a:b;
@@ -55,6 +56,7 @@ void init() {
 
 	fin >> A;
 	fin >> N;
+	INF = 0.3 * A.length();
 	for (int i = 0; i < N; i++)
 		fin>>str[i];
 	K = str[0].length();
@@ -90,23 +92,28 @@ void createGraph() {
 }
 
 void get_edit_distance(int nodenum) {
-	for (int i = 0; i <= K; i++){
-		edit[i][0] = i;
+
+	int ni, pi;
+	for (int i = 0; i <= K; i++)
 		edit[0][i] = i;
-	}
 	for (int i = 1; i <= K; i++)
+	{
+		ni = i & 1; pi = ni ^ 1;
+		edit[ni][0] = i;
 		for (int j = 1; j <= K; j++)
 		{
-			edit[i][j] = edit[i - 1][j] + 1;
-			edit[i][j] = min(edit[i][j], edit[i][j - 1] + 1);
+			edit[ni][j] = edit[pi][j] + 1;
+			edit[ni][j] = min(edit[ni][j], edit[ni][j - 1] + 1);
 			if (str[nodenum][i - 1] == A[j - 1])
-				edit[i][j] = min(edit[i][j], edit[i - 1][j - 1]);
+				edit[ni][j] = min(edit[ni][j], edit[pi][j - 1]);
 			else
-				edit[i][j] = min(edit[i][j], edit[i - 1][j - 1] + 1);
+				edit[ni][j] = min(edit[ni][j], edit[pi][j - 1] + 1);
 		}
+	}
+
 
 	for (int i = 0; i <= K; i++) {
-		g[nodenum][i] = edit[K][i];
+		g[nodenum][i] = edit[K & 1][i];
 		pre[nodenum][i] = -1;
 		state[nodenum][i] = -1;
 	}
