@@ -29,10 +29,10 @@ string ToStr(int i) {
 int main() {
 
 
-	//freopen("input.in","r", stdin);
-	//freopen("output.out","w", stdout);
-	freopen("task1.in","r", stdin);
-	freopen("task1.out","w", stdout);
+	freopen("input.in","r", stdin);
+	freopen("output.out","w", stdout);
+	//freopen("task1.in","r", stdin);
+	//freopen("task1.out","w", stdout);
 
 	cin>>A;
 	cin>>B;

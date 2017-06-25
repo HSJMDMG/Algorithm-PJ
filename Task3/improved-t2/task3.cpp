@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstring>
 #include <fstream>
 #include <cstdio>
 #include <queue>
@@ -373,6 +374,7 @@ void work() {
 
 	int j = 1;
 	for (int jj = 0; jj <= A.length(); jj++) {
+		cout<<"Current pos in A:" <<jj<<endl;
 		j = j ^ 1;
 		int i;
 		if (jj < K) {
