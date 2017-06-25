@@ -41,8 +41,8 @@ int edit[MAXK][MAXK];
 int tf[MAXLEN][MAXN], pedit[MAXLEN][MAXN];
 stack<string> tS;
 
-ifstream fin("test.txt");
-ofstream fout("test.out");
+ifstream fin("test2.in");
+ofstream fout("test2.out");
 
 int min(int a, int b){
 	return a<b?a:b;
@@ -122,7 +122,7 @@ void pre_process() {
 		get_edit_distance(nodenum);
 	}
 
-	for (int i = 0; i<= A.length(); i++){
+	for (int i = 0; i< N; i++){
 		inq[i][0] = false;
 		inq[i][1] = false;
 	}
@@ -238,6 +238,7 @@ void print_result(int row) {
 	int mindistance;
 	int pos = -1;
 
+	/*
 		//cout<<A.length()<<endl;
 				cout<<"Pre:"<<endl;
 				for (int i = 0; i< N;i++)
@@ -263,7 +264,7 @@ void print_result(int row) {
 					cout<<endl;
 				}
 
-
+				*/
 
 		//return;
 
@@ -272,15 +273,15 @@ void print_result(int row) {
 		//
 		//
 		row = (A.length() & 1) ^ 1;
-		cout<<row<<endl;
-		
+		//cout<<row<<endl;
+
 		for (int i = 0; i < N; i++)
 			if (mindistance > f[i][row]) {
 				mindistance = f[i][row];
 				pos = i;
 				//cout<<i<<"mini"<<" "<<endl;
 			}
-			return;
+			//return;
 
 
 			//cout<<"f[i][0 -- A.length]"<<endl;
@@ -306,7 +307,7 @@ void print_result(int row) {
 
 		while (state[i][j] >=0)
 		{
-			cout<<i<<","<<j<<" "<<state[i][j]<<endl;
+			//cout<<i<<","<<j<<" "<<state[i][j]<<endl;
 			state_str  = char(48 + state[i][j]) + state_str;
 
 			if (state[i][j] != 4) path_str = ch[i] + path_str;
@@ -360,21 +361,17 @@ void work() {
 
 	pre_process();
 
+
+
+
 	int j = 1;
 	for (int jj = 0; jj <= A.length(); jj++) {
-		//cout<< j <<endl;
-		//cout<<"AC!"<<endl;
 		j = j ^ 1;
-
-		//for (int ll = 0; ll < N; ll++)
-		//	fout<<f[ll][j]<<" ";
-		//fout<<endl;
-
-
 		int i;
 		if (jj < K) {
 			for (int _ = 0; _  < N; _++) {
-				if (!inq[j][_]) {Q[j].push(_);inq[j][_] = true; cout<<_<<endl;}
+				if (!inq[j][_]) {Q[j].push(_);inq[j][_] = true;}
+
 				f[_][j ^ 1] = g[_][jj + 1];
 				state[_][jj + 1] = -1;
 				pre[_][jj + 1] = -1;
@@ -394,14 +391,14 @@ void work() {
 			{
 
 				int k=p->v;
-				cout<<"e("<<i<<","<<k<<")"<<endl;
+				//cout<<"e("<<i<<","<<k<<")"<<endl;
 
 				if (f[k][j] > f[i][j] + 1)
 				{
 					f[k][j] = f[i][j] + 1;
 					pre[k][jj] = i;
 					state[k][jj] = 1;
-					cout<<k<<","<<jj<<","<<state[k][jj]<<endl;
+					//cout<<k<<","<<jj<<","<<state[k][jj]<<endl;
 
 					if (!inq[j][k])
 					{
@@ -410,14 +407,14 @@ void work() {
 					}
 				}
 
-				if (ch[k] != A[j])
+				if (ch[k] != A[jj])
 				{
 					if (f[k][j ^ 1] > f[i][j] + 1)
 					{
 						f[k][j ^ 1] = f[i][j] + 1;
 						pre[k][jj + 1] = i;
 						state[k][jj + 1] = 2;
-						cout<<k<<","<<jj + 1<<","<<state[k][jj + 1]<<endl;
+						//cout<<k<<","<<jj + 1<<","<<state[k][jj + 1]<<endl;
 
 
 
@@ -435,7 +432,7 @@ void work() {
 						f[k][j ^ 1] = f[i][j];
 						pre[k][jj + 1] = i;
 						state[k][jj + 1] = 3;
-						cout<<k<<","<<jj + 1<<","<<state[k][jj + 1]<<endl;
+						//cout<<k<<","<<jj + 1<<","<<state[k][jj + 1]<<endl;
 
 
 						if (!inq[j ^ 1][k])
@@ -453,7 +450,7 @@ void work() {
 				f[i][j ^ 1] = f[i][j] + 1;
 				pre[i][jj + 1] = i;
 				state[i][jj + 1] = 4;
-				cout<<i<<","<<jj<<","<<state[i][jj]<<endl;
+				//cout<<i<<","<<jj<<","<<state[i][jj]<<endl;
 
 
 				if (!inq[j ^ 1][i])
@@ -469,8 +466,6 @@ void work() {
 		for (int _ = 0; _  < N; _++) {
 			inq[j][_] = false;
 			f[_][j] = INF;
-			state[_][j] = -1;
-			pre[_][j] = -1;
 		}
 
 	}
@@ -485,8 +480,7 @@ void work() {
 
 
 int main() {
-	//freopen("test2.in", "r", stdin);
-	//freopen("t2.out", "w", stdout);
+
 
 	init();
 	createGraph();
